@@ -17,3 +17,13 @@ procurado, vetor de inteiros e o número de threads.
 vetor usando o Merge Sort recursivo. Faça com que a thread
 principal dispare duas threads para classificar cada metade do
 vetor.
+
+
+## Como executar
+
+todos os comando foram executados a partir do diretório base da atividade
+
+### Ex1
+```sh 
+$ javac ex1/*.java && java ex1.Ex1 
+```
