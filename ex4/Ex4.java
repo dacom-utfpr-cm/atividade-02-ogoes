@@ -10,6 +10,9 @@ public class Ex4 {
 	static long index = -1;
 
 	public static void findInArray(final int[] array, final int value, final int threadNumber) {
+
+		if (array.length % threadNumber != 0) return;
+
 		int range = array.length / threadNumber;
 
 		int iterator = 0;
@@ -19,27 +22,19 @@ public class Ex4 {
 		while (iterator < array.length) {
 			final int index = iterator;
 
-
 			Thread thread = new Thread(() -> {
-				int start = index;
-				int end = start + range;
-
-				int middle = (end + start) / 2;
+				int verify = index;
+				int end = verify + range;
 
 				synchronized(Ex4.found) {
 
-					while (!Ex4.found && start <= end) {
+					while (!Ex4.found && verify < end && array[verify] != value) verify++;
 
-						if (array[middle] < value) {
-							start = middle + 1;
-						} else if (array[middle] > value) {
-							end = middle - 1;
-						} else {
-							Ex4.found = true;
-							Ex4.index = middle;
-						}
-						middle = (end + start) / 2;
+					if (array[verify] == value) {
+						Ex4.found = true;
+						Ex4.index = verify;
 					}
+
 				}
 
 			});
@@ -64,7 +59,7 @@ public class Ex4 {
 		int[] array = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 
 
-		findInArray(array, 4, 2);
+		findInArray(array, 4, 6);
 		if (Ex4.found) {
 			System.out.println("Numero encontrado, indice[" + Ex4.index + "]");
 		}
