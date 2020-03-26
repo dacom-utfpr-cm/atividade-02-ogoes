@@ -1,72 +1,83 @@
 package ex3;
 
 
+import java.lang.Math;
 import java.util.List;
+import java.util.Collections;
 import java.util.ArrayList;
 
+
+
 public class Ex3 {
+	static List<Integer> primes = new ArrayList<Integer>();
 
-	static Boolean found = false;
-	static long index = -1;
-
-	public static void findInArray(final int[] array, final int value, final int threadNumber) {
-		int range = array.length / threadNumber;
-
-		int iterator = 0;
+	public static void calculatePrimes(final double limit) {
+		double logBase = 10;
+		int interactions = (int) Math.log(limit) / (int)Math.log(logBase);
 
 		List<Thread> threads = new ArrayList<Thread>();
 
-		while (iterator < array.length) {
-			final int index = iterator;
+		int threadsSum = 0;
+
+		int iterator = 0;
+		int start = 1;
+		while ((iterator++) < interactions) {
+			threadsSum += iterator;
 
 
-			Thread thread = new Thread(() -> {
-				int start = index;
-				int end = start + range;
+			final int begin = start;
+			final int end = (int) Math.pow(logBase, iterator);
 
-				int middle = (end + start) / 2;
 
-				synchronized(Ex3.found) {
+			for (int i = 0; i < threadsSum; ++i) {
 
-					while (!Ex3.found && start <= end) {
+				final int threadsNum = threadsSum;
 
-						if (array[middle] < value) {
-							start = middle + 1;
-						} else if (array[middle] > value) {
-							end = middle - 1;
-						} else {
-							Ex3.found = true;
-							Ex3.index = middle;
+				final int range = ((end - begin) / threadsNum);
+				final int parcela = (range * i);
+				final int init = begin + parcela;
+
+
+				Thread thread = new Thread(() -> {
+
+					for (int test = init + 1; test < init + range; ++test) {
+						boolean isPrime = true;
+
+						synchronized(Ex3.primes) {
+							for (Integer prime: primes) {
+								if (test % prime == 0) isPrime = false;
+							}
+
+							if (isPrime) primes.add(test);
 						}
-						middle = (end + start) / 2;
 					}
-				}
 
-			});
+				});
 
-			threads.add(thread);
-			thread.start();
 
-			iterator += range;
+				threads.add(thread);
+				thread.start();
+			}
+			start = (int) Math.pow(logBase, iterator);
 		}
 
-
-		for (Thread thread: threads) {
+		for(Thread thread: threads) {
 			try {
 				thread.join();
-			} catch (InterruptedException exception) {
+			} catch(InterruptedException exception) {
 				System.out.println(exception);
 			}
-		}
+		} 
+
+		Collections.sort(primes);
+
 	};
 
 	public static void main(String[] args) {
-		int[] array = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+
+		calculatePrimes(100000);
 
 
-		findInArray(array, 4, 2);
-		if (Ex3.found) {
-			System.out.println("Numero encontrado, indice[" + Ex3.index + "]");
-		}
-	};
+		System.out.println(primes);
+	}
 };
