@@ -27,3 +27,24 @@ todos os comando foram executados a partir do diretório base da atividade
 ```sh 
 $ javac ex1/*.java && java ex1.Ex1 
 ```
+
+
+### Ex2
+```sh 
+$ javac ex2/*.java && java ex2.Ex2 
+```
+
+### Ex3
+```sh 
+$ javac ex3/*.java && java ex3.Ex3 
+```
+
+### Ex4
+```sh 
+$ javac ex4/*.java && java ex4.Ex4 
+```
+
+### Ex5
+```sh 
+$ javac ex5/*.java && java ex5.Ex5 
+```
